@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Free Class 02 — Your Tools & The Funding Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400;1,14..32,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0c0d; --slide-bg:#0b0c0d; --ink:#f4f6f7; --mut:#9aa3a6; --dim:#5c6366;
+    --mint:#3de0b0; --mint-2:#7af0cf; --green:#3de0b0; --red:#ff6b5e; --line:#1f2325; --card:#121516;
+    --sans:'Inter',-apple-system,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg)}
+  body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--bg)}
+  .deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg)}
+  .slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+    padding:130px 200px;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg)}
+  .slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:1;transition:opacity .6s ease}
+  .slide::before{content:"";position:absolute;width:900px;height:900px;border-radius:50%;
+    background:radial-gradient(circle, rgba(61,224,176,.12) 0%, transparent 65%);top:-300px;right:-250px;pointer-events:none;filter:blur(20px)}
+  .slide.glow-bl::before{top:auto;right:auto;bottom:-350px;left:-300px;background:radial-gradient(circle, rgba(61,224,176,.10) 0%, transparent 65%)}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1)}
+  .slide.active .reveal{opacity:1;transform:none}
+  .slide.active .reveal:nth-child(1){transition-delay:.08s}
+  .slide.active .reveal:nth-child(2){transition-delay:.22s}
+  .slide.active .reveal:nth-child(3){transition-delay:.36s}
+  .slide.active .reveal:nth-child(4){transition-delay:.50s}
+  .kicker{font-size:22px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--mint);margin-bottom:56px;display:flex;align-items:center;justify-content:center;gap:20px}
+  .kicker::before{content:"";width:46px;height:2px;background:var(--mint)}
+  .kicker.dim{color:var(--dim)} .kicker.dim::before{background:var(--dim)}
+  h1{font-weight:800;font-size:160px;line-height:.96;letter-spacing:-.035em;max-width:1480px}
+  h2{font-weight:700;font-size:104px;line-height:1.08;letter-spacing:-.026em;max-width:1500px}
+  h2.sm{font-size:88px}
+  .lead-sub{font-weight:500;font-size:76px;line-height:1.1;letter-spacing:-.02em;color:var(--mint);margin-top:44px}
+  .sub{font-size:42px;font-weight:300;line-height:1.5;color:var(--mut);margin-top:48px;max-width:1180px}
+  .sub b{color:var(--ink);font-weight:500}
+  .foot{font-size:24px;font-weight:400;color:var(--dim);margin-top:72px;letter-spacing:.08em;text-transform:uppercase}
+  .accent{color:var(--mint)}
+  .mega{font-weight:800;font-size:300px;line-height:.85;letter-spacing:-.045em;background:linear-gradient(175deg,#fff 0%,var(--mint) 130%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .mega-md{font-weight:800;font-size:240px;line-height:.85;letter-spacing:-.04em;color:var(--mint)}
+  .tail{font-size:90px;font-weight:700;line-height:1.1;letter-spacing:-.026em;margin-top:32px;max-width:1500px}
+  .punch{font-weight:800;font-size:116px;line-height:1.04;letter-spacing:-.03em;color:var(--mint);margin-top:44px;max-width:1500px}
+  .ladder{font-weight:800;font-size:150px;letter-spacing:-.03em;line-height:1}
+  .ladder .a{color:var(--dim);font-weight:600}
+  .step{font-weight:700;font-size:64px;letter-spacing:-.02em;margin-top:8px}
+  .step .a{color:var(--dim);font-weight:500}
+  /* columns */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin:32px auto 0;max-width:1500px;width:100%;text-align:left}
+  .col{border:1px solid var(--line);border-radius:24px;padding:56px 52px;background:var(--card)}
+  .col.good{border-color:rgba(61,224,176,.4)} .col.bad{border-color:rgba(255,107,94,.3)}
+  .col.alt{border-color:rgba(122,240,207,.35)}
+  .col h3{font-size:26px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:46px;color:var(--mint)}
+  .col li{list-style:none;font-size:42px;font-weight:300;padding:26px 0;display:flex;gap:24px;align-items:center;border-top:1px solid var(--line);line-height:1.15}
+  .col li:first-of-type{border-top:none}
+  .col .mk{flex:0 0 auto;font-weight:600;font-size:36px;color:var(--mint)}
+  /* 3 stages row */
+  .stages{display:flex;gap:30px;align-items:center;margin-top:40px;font-weight:700;font-size:60px;letter-spacing:-.02em}
+  .stages .s{color:var(--ink)} .stages .ar{color:var(--dim);font-weight:500;font-size:48px}
+  .stages .s.on{color:var(--mint)}
+  /* steps stack */
+  .stack{display:flex;flex-direction:column;gap:36px;margin:52px auto 0;width:fit-content;align-items:flex-start;text-align:left}
+  .stack .row{display:flex;align-items:center;gap:30px;font-size:50px;font-weight:300}
+  .stack .row .ic{color:var(--mint);font-weight:600;font-size:44px}
+  .stack .row b{font-weight:500;color:var(--ink)}
+  /* CTA */
+  .cta{display:inline-flex;align-items:center;gap:28px;align-self:center;margin-top:60px;background:var(--mint);color:#06251c;font-weight:600;font-size:78px;padding:42px 80px;border-radius:22px;letter-spacing:-.005em}
+  /* chrome */
+  .deck-chrome{position:fixed;bottom:30px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 56px;z-index:1000;pointer-events:none}
+  .brand{font-size:16px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+  .count{font-size:17px;font-weight:500;color:var(--mut)} .count b{color:var(--mint)}
+  .progress{position:fixed;top:0;left:0;height:3px;background:var(--mint);width:0;z-index:1000;transition:width .5s ease}
+  .nav{position:fixed;inset:0;display:flex;z-index:10} .nav .z{flex:1;cursor:pointer} .nav .z.prev{flex:0 0 26%}
+  .dots{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:11px;z-index:1100}
+  .dots .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--dim);background:transparent;cursor:pointer;padding:0;transition:all .3s ease}
+  .dots .dot:hover{border-color:var(--mut);transform:scale(1.25)}
+  .dots .dot.on{background:var(--mint);border-color:var(--mint);transform:scale(1.35);box-shadow:0 0 12px rgba(61,224,176,.6)}
+  .hint{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);font-size:15px;letter-spacing:.1em;color:var(--dim);z-index:1000;pointer-events:none;transition:opacity .8s}
+  @media (prefers-reduced-motion:reduce){.reveal{transition-duration:.2s}}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="deck-viewport"><main class="deck-stage" id="stage">
+
+  <!-- ===== PART 1 — THE TOOLS ===== -->
+
+  <!-- 1 title -->
+  <section class="slide active">
+    <div class="kicker reveal">Free Class 02</div>
+    <h1 class="reveal">Your Tools &amp;<br>The Funding Ladder</h1>
+    <div class="foot reveal">Joey Xoto · Cryptic Hustle</div>
+  </section>
+
+  <!-- 2 thesis -->
+  <section class="slide">
+    <div class="kicker reveal">Today, the practical side</div>
+    <h2 class="reveal sm">The tools you trade with,<br>and how you actually <span class="accent">fund it.</span></h2>
+  </section>
+
+  <!-- 3 two tools -->
+  <section class="slide">
+    <div class="kicker reveal">You only need two tools</div>
+    <div class="cols reveal">
+      <div class="col alt"><h3>Charting</h3><ul><li><span class="mk">→</span>Where you read the market</li></ul></div>
+      <div class="col alt"><h3>Execution</h3><ul><li><span class="mk">→</span>Where you place the trade</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 4 tradingview -->
+  <section class="slide">
+    <div class="kicker reveal">Tool 1 · Charting</div>
+    <h2 class="reveal">TradingView</h2>
+    <div class="sub reveal">Where you read the market and plan the trade.</div>
+  </section>
+
+  <!-- 5 brokerage -->
+  <section class="slide">
+    <div class="kicker reveal">Tool 2 · Execution</div>
+    <h2 class="reveal">A brokerage account</h2>
+    <div class="sub reveal">Where you actually place the trade.</div>
+  </section>
+
+  <!-- 6 the rule -->
+  <section class="slide glow-bl">
+    <div class="kicker reveal">One rule to remember</div>
+    <h2 class="reveal sm">Read on TradingView.<br>Trade on the broker.</h2>
+    <div class="sub reveal">Never execute from your charts.</div>
+  </section>
+
+  <!-- ===== PART 2 — THE FUNDING LADDER ===== -->
+
+  <!-- 7 divider -->
+  <section class="slide">
+    <div class="kicker reveal">Part 2</div>
+    <h2 class="reveal">How you fund yourself<br>as a <span class="accent">trader.</span></h2>
+  </section>
+
+  <!-- 8 three stages -->
+  <section class="slide">
+    <div class="kicker reveal">It happens in three stages</div>
+    <div class="stages reveal"><span class="s on">Beginner</span><span class="ar">→</span><span class="s">Intermediate</span><span class="ar">→</span><span class="s">Expert</span></div>
+  </section>
+
+  <!-- 9 beginner -->
+  <section class="slide">
+    <div class="kicker reveal">Stage 1</div>
+    <h2 class="reveal">Beginner</h2>
+    <div class="lead-sub reveal">Prop firms only.</div>
+  </section>
+
+  <!-- 10 what is a prop firm -->
+  <section class="slide">
+    <div class="kicker reveal">So what is a prop firm</div>
+    <h2 class="reveal sm">You trade their capital.</h2>
+    <div class="sub reveal">You pass a test, they fund you, <b>you keep a cut of what you make.</b></div>
+  </section>
+
+  <!-- 11 how it works -->
+  <section class="slide">
+    <div class="kicker reveal">How it works</div>
+    <div class="stack reveal">
+      <div class="row"><span class="ic">1</span><b>Pass the evaluation</b></div>
+      <div class="row"><span class="ic">2</span><b>Get funded</b></div>
+      <div class="row"><span class="ic">3</span><b>Take payouts</b></div>
+    </div>
+  </section>
+
+  <!-- 12 the bits that matter -->
+  <section class="slide">
+    <div class="kicker reveal">The bits that actually matter</div>
+    <div class="stack reveal">
+      <div class="row"><span class="ic">→</span>The buffer</div>
+      <div class="row"><span class="ic">→</span>Trailing drawdown</div>
+      <div class="row"><span class="ic">→</span>How your targets are set</div>
+    </div>
+  </section>
+
+  <!-- 13 ladder -->
+  <section class="slide glow-bl">
+    <div class="kicker reveal">The beginner ladder</div>
+    <div class="ladder reveal">3 <span class="a">→</span> 5 <span class="a">→</span> 10 <span class="a">→</span> 20</div>
+    <div class="sub reveal">funded accounts. You scale by adding more, not by risking more.</div>
+  </section>
+
+  <!-- 14 intermediate -->
+  <section class="slide">
+    <div class="kicker reveal">Stage 2</div>
+    <h2 class="reveal">Intermediate</h2>
+    <div class="lead-sub reveal">Stop relying on one firm.</div>
+  </section>
+
+  <!-- 15 stack firms -->
+  <section class="slide">
+    <div class="kicker reveal">Once one firm is working</div>
+    <h2 class="reveal sm">Stack across several firms<br>at once.</h2>
+    <div class="sub reveal">More capital, risk spread wider. There's a tool that makes it manageable.</div>
+  </section>
+
+  <!-- 16 expert -->
+  <section class="slide">
+    <div class="kicker reveal">Stage 3</div>
+    <h2 class="reveal">Expert</h2>
+    <div class="lead-sub reveal">Prop firms, plus your own money.</div>
+  </section>
+
+  <!-- 17 when to add personal -->
+  <section class="slide">
+    <div class="kicker reveal">When to add personal funds</div>
+    <h2 class="reveal sm">Once your cash is solid,<br>start a small personal account.</h2>
+    <div class="sub reveal">For example, at 50k in cash, put 5k aside to trade as your own.</div>
+  </section>
+
+  <!-- 18 the engine -->
+  <section class="slide">
+    <div class="kicker reveal">The engine</div>
+    <div class="stack reveal">
+      <div class="row"><span class="ic">→</span>Take a slice of every payout</div>
+      <div class="row"><span class="ic">→</span>Feed your personal account</div>
+      <div class="row"><span class="ic">→</span>Repeat, and let it grow</div>
+    </div>
+  </section>
+
+  <!-- 19 risk grows -->
+  <section class="slide">
+    <div class="kicker reveal">Then the risk grows with it</div>
+    <div class="ladder reveal" style="font-size:120px">$300 <span class="a">→</span> $1,000 <span class="a">→</span> $1,500</div>
+    <div class="sub reveal">Risk per trade, scaling up only as the account does.</div>
+  </section>
+
+  <!-- 20 prop vs personal -->
+  <section class="slide">
+    <div class="kicker reveal">Prop vs personal</div>
+    <div class="cols reveal">
+      <div class="col alt"><h3>Prop firms</h3><ul>
+        <li><span class="mk">→</span>Their capital</li>
+        <li><span class="mk">→</span>Their rules</li>
+        <li><span class="mk">→</span>Scale fast</li></ul></div>
+      <div class="col good"><h3>Personal</h3><ul>
+        <li><span class="mk">→</span>Your capital</li>
+        <li><span class="mk">→</span>Your rules</li>
+        <li><span class="mk">→</span>Full upside</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 21 recap path -->
+  <section class="slide">
+    <div class="kicker reveal">The whole path</div>
+    <div class="stages reveal"><span class="s on">Beginner</span><span class="ar">→</span><span class="s on">Intermediate</span><span class="ar">→</span><span class="s on">Expert</span></div>
+    <div class="sub reveal">That's the map. It's a journey, but now you can see it.</div>
+  </section>
+
+  <!-- ===== BRIDGE ===== -->
+
+  <!-- 22 bridge -->
+  <section class="slide">
+    <div class="kicker reveal">One honest thing</div>
+    <h2 class="reveal sm">A map is the easy part.<br>Walking it without getting lost isn't.</h2>
+  </section>
+
+  <!-- 23 trading circle -->
+  <section class="slide">
+    <div class="kicker reveal">That's what the room is for</div>
+    <h2 class="reveal sm">Trading Circle</h2>
+    <div class="stack reveal">
+      <div class="row"><span class="ic">→</span>Live sessions, Monday to Friday</div>
+      <div class="row"><span class="ic">→</span>Walked through this path, step by step</div>
+      <div class="row"><span class="ic">→</span>People a few rungs ahead of you</div>
+    </div>
+  </section>
+
+  <!-- 24 CTA -->
+  <section class="slide">
+    <div class="kicker reveal">If you want it walked with you</div>
+    <h2 class="reveal">Apply here:</h2>
+    <a class="cta reveal">cryptichustle.com/apply</a>
+    <div class="sub reveal">Application only. The room stays small.</div>
+  </section>
+
+</main></div>
+
+<div class="deck-chrome"><div class="brand">Cryptic Hustle · Free Class</div><div class="count"><b id="cur">1</b> / <span id="tot">24</span></div></div>
+<div class="hint" id="hint">arrows navigate · F fullscreen · dots to jump</div>
+<div class="nav"><div class="z prev" onclick="deck.go(-1)"></div><div class="z next" onclick="deck.go(1)"></div></div>
+<div class="dots" id="dots"></div>
+
+<script>
+  class Deck{
+    constructor(){
+      this.stage=document.getElementById('stage');
+      this.slides=[...document.querySelectorAll('.slide')];
+      this.i=0; this.tot=this.slides.length;
+      document.getElementById('tot').textContent=this.tot;
+      this.buildDots(); this.scale();
+      window.addEventListener('resize',()=>this.scale());
+      document.addEventListener('keydown',e=>this.key(e));
+      setTimeout(()=>document.getElementById('hint').style.opacity='0',4500);
+      this.show(0);
+    }
+    scale(){const f=Math.min(window.innerWidth/1920,window.innerHeight/1080);
+      const x=(window.innerWidth-1920*f)/2,y=(window.innerHeight-1080*f)/2;
+      this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;}
+    buildDots(){this.dots=document.getElementById('dots');
+      for(let k=0;k<this.tot;k++){const b=document.createElement('button');b.className='dot';b.title='Slide '+(k+1);b.addEventListener('click',()=>this.show(k));this.dots.appendChild(b);}}
+    show(n){this.i=Math.max(0,Math.min(this.tot-1,n));
+      this.slides.forEach((s,k)=>s.classList.toggle('active',k===this.i));
+      [...this.dots.children].forEach((d,k)=>d.classList.toggle('on',k===this.i));
+      document.getElementById('cur').textContent=this.i+1;
+      document.getElementById('prog').style.width=((this.i+1)/this.tot*100)+'%';}
+    go(d){this.show(this.i+d)}
+    key(e){const k=e.key;
+      if(k==='ArrowRight'||k===' '||k==='PageDown'){this.go(1);e.preventDefault();}
+      else if(k==='ArrowLeft'||k==='PageUp'){this.go(-1);e.preventDefault();}
+      else if(k==='Home')this.show(0); else if(k==='End')this.show(this.tot-1);
+      else if(k.toLowerCase()==='f'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}}
+  }
+  const deck=new Deck();
+</script>
+</body>
+</html>
